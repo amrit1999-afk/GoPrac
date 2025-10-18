@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"net"
+	"strconv"
 
 	"github.com/debdut/TCPClient/pkg/log"
 )
@@ -42,7 +43,7 @@ func Message(conn net.Conn, message string) (string, error) {
 		clientLog("Failed to write")
 		return "", err
 	}
-	clientLog("Wrote " + string(n) + " bytes")
+	clientLog("Wrote " + strconv.Itoa(n) + " bytes")
 
 	reply, err := bufio.NewReader(conn).ReadString('\n')
 	if err != nil {

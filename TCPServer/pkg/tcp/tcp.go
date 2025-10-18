@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"bufio"
+	"fmt"
 	"net"
 	"strings"
 
@@ -25,12 +26,14 @@ func StartServer(addr string) error {
 			serverLog("Couldn't accept connection")
 		} else {
 			serverLog("Accepted Connection")
-			handleConn(conn)
+			go handleConn(conn)
 		}
 	}
 }
 
 func handleConn(conn net.Conn) {
+	defer conn.Close()
+
 	serverLog("Conn handler")
 	reader := bufio.NewReader(conn)
 
@@ -42,5 +45,6 @@ func handleConn(conn net.Conn) {
 		}
 
 		serverLog("Message: " + strings.TrimSpace(msg))
+		fmt.Fprintf(conn, msg+"\r\n")
 	}
 }
