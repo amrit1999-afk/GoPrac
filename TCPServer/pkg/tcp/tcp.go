@@ -25,20 +25,29 @@ func StartServer(addr string) error {
 		if err != nil {
 			serverLog("Couldn't accept connection")
 		} else {
-			serverLog("Accepted Connection")
-			go handleConn(conn)
+			reader := bufio.NewReader(conn)
+			cliendID, err := reader.ReadString('\n')
+
+			if err != nil {
+				fmt.Println("Failed to get Client ID")
+				conn.Close()
+				continue
+			}
+			serverLog("Successfully Connected with Client: " + cliendID)
+			go handleConn(conn, reader)
+			// handleConn(conn, reader)
 		}
 	}
 }
 
-func handleConn(conn net.Conn) {
+func handleConn(conn net.Conn, reader *bufio.Reader) {
 	defer conn.Close()
-
 	serverLog("Conn handler")
-	reader := bufio.NewReader(conn)
 
 	for {
+
 		msg, err := reader.ReadString('\n')
+
 		if err != nil {
 			serverLog("Disconnected")
 			break

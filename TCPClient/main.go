@@ -8,14 +8,16 @@ import (
 )
 
 func main() {
-	conn, err := tcp.Connect("localhost:5443")
+	clientID := tcp.UniqueIDGenerator()
+	fmt.Println("Client ID: ", clientID)
+	conn, err := tcp.Connect("localhost:5443", clientID)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
 	messages := []string{
-		"hello",
+		"hello Maakichu\n",
 		"how are you doing?",
 		"Great!",
 	}
